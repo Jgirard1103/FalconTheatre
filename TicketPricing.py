@@ -85,12 +85,11 @@ ADD_ON_PRICES = {
 
 # ---- Images (relative paths inside the images/ subfolder) ------------------
 IMAGE_FOLDER = "images"
-BANNER_IMAGE = "falcon_performing_arts_center.jpg"
+BANNER_IMAGE = "Falcon_Performing_Arts_Center.jpg"
 SHOW_IMAGES = {
     "The Glass Menagerie": "the_glass_menagerie.jpg",
-    "Into the Woods": "into_the_woods.jpg",
-    "Symphony Pops Night": "symphony_pops_night.jpg",
-    # "Improv Comedy Night" has no image yet -> the banner is used instead.
+    "Into the Woods": "Into_The_Woods.jpg",
+    "Symphony Pops Night": "Symphony_Pops_Night.jpg",
 }
 
 
