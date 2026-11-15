@@ -90,6 +90,7 @@ SHOW_IMAGES = {
     "The Glass Menagerie": "the_glass_menagerie.jpg",
     "Into the Woods": "Into_The_Woods.jpg",
     "Symphony Pops Night": "Symphony_Pops_Night.jpg",
+    "Improv Comedy Night": "improv_comedy_night",
 }
 
 
