@@ -1,6 +1,9 @@
 """
 The Falcon Performing Arts Center - Streamlit Box Office
 Fall 2026 CS 230 Teamwork 4
+
+Run locally:   streamlit run app.py
+Folder layout: app.py  +  images/ (same folder)  +  requirements.txt
 """
 
 import os
@@ -33,7 +36,7 @@ import streamlit as st
 #    min/max tickets.
 #
 # 5. SHOW_IMAGES maps show -> image file in the images/ folder (relative path).
-#    A show with no image of its own falls back to the arts-center banner.
+#    Shows missing from SHOW_IMAGES fall back to the arts-center banner.
 # =============================================================================
 
 # ---- Constants -------------------------------------------------------------
@@ -85,12 +88,12 @@ ADD_ON_PRICES = {
 
 # ---- Images (relative paths inside the images/ subfolder) ------------------
 IMAGE_FOLDER = "images"
-BANNER_IMAGE = "Falcon_Performing_Arts_Center.jpg"
+BANNER_IMAGE = "falcon_performing_arts_center.jpg"
 SHOW_IMAGES = {
     "The Glass Menagerie": "the_glass_menagerie.jpg",
-    "Into the Woods": "Into_The_Woods.jpg",
-    "Symphony Pops Night": "Symphony_Pops_Night.jpg",
-    "Improv Comedy Night": "improv_comedy_night",
+    "Into the Woods": "into_the_woods.jpg",
+    "Symphony Pops Night": "symphony_pops_night.jpg",
+    "Improv Comedy Night": "improv_comedy_night.jpg",
 }
 
 
@@ -103,9 +106,37 @@ def money(amount):
 
 
 def image_path(filename):
-    """Build a path to an image relative to this file (works locally + cloud)."""
+    """Find an image in the images/ folder next to this file.
+
+    Matching ignores capitalization, spaces and underscores, so
+    'Falcon_Performing_Arts_Center.jpg' and 'falcon performing arts center.JPG'
+    both work (Streamlit Cloud runs on Linux, where names are case-sensitive).
+    Returns None if the image cannot be found.
+    """
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(base_dir, IMAGE_FOLDER, filename)
+    folder = os.path.join(base_dir, IMAGE_FOLDER)
+    exact = os.path.join(folder, filename)
+    if os.path.exists(exact):
+        return exact
+
+    def simplify(name):
+        stem = os.path.splitext(name)[0]
+        return stem.lower().replace("_", "").replace(" ", "").replace("-", "")
+
+    if os.path.isdir(folder):
+        for found in os.listdir(folder):
+            if simplify(found) == simplify(filename):
+                return os.path.join(folder, found)
+    return None
+
+
+def show_image(filename, caption=None):
+    """Display an image, or a friendly note if the file is missing."""
+    path = image_path(filename)
+    if path is None:
+        st.info(f"(Image not found: {IMAGE_FOLDER}/{filename})")
+    else:
+        st.image(path, caption=caption, use_container_width=True)
 
 
 def calculate_order(show, section, num_tickets, add_ons, is_student, wants_parking):
@@ -181,7 +212,7 @@ st.sidebar.caption("Student discount applies to the ticket subtotal only.")
 # ---- Header / banner --------------------------------------------------------
 st.title("🎭 The Falcon Performing Arts Center")
 st.subheader("Box Office")
-st.image(image_path(BANNER_IMAGE), use_container_width=True)
+show_image(BANNER_IMAGE)
 
 st.header("1. Choose Your Show")
 
@@ -215,7 +246,7 @@ with left_col:
 with right_col:
     # Show image changes with the selection (banner is the fallback)
     show_image_file = SHOW_IMAGES.get(show, BANNER_IMAGE)
-    st.image(image_path(show_image_file), caption=show, use_container_width=True)
+    show_image(show_image_file, caption=show)
     st.subheader(show)
     st.write(SHOW_DESCRIPTIONS[show])
 
