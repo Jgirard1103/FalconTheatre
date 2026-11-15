@@ -1,9 +1,6 @@
 """
 The Falcon Performing Arts Center - Streamlit Box Office
 Fall 2026 CS 230 Teamwork 4
-
-Run locally:   streamlit run app.py
-Folder layout: app.py  +  images/ (same folder)  +  requirements.txt
 """
 
 import os
